@@ -1,4 +1,4 @@
-**[This code is a modifification of the  "Implementing a CNN for Text Classification in Tensorflow" blog post to classify text against their Dialog-Act tags.](http://www.wildml.com/2015/12/implementing-a-cnn-for-text-classification-in-tensorflow/)**
+**[This code is a modification of the  "Implementing a CNN for Text Classification in Tensorflow" blog post to classify text against their Dialog-Act tags.](http://www.wildml.com/2015/12/implementing-a-cnn-for-text-classification-in-tensorflow/)**
 
 It is slightly simplified implementation of Kim's [Convolutional Neural Networks for Sentence Classification](http://arxiv.org/abs/1408.5882) paper in Tensorflow.
 
