@@ -2,6 +2,7 @@ import numpy as np
 import re
 import itertools
 from collections import Counter
+import os
 
 
 def clean_str(string):
@@ -42,6 +43,35 @@ def load_data_and_labels(positive_data_file, negative_data_file):
     positive_labels = [[0, 1] for _ in positive_examples]
     negative_labels = [[1, 0] for _ in negative_examples]
     y = np.concatenate([positive_labels, negative_labels], 0)
+    return [x_text, y]
+
+def load_swbd_data(data_dir= os.getcwd() + "/data/switchboard"):
+
+    from statsmodels.tools import categorical
+    import pandas as pd
+    prev_dir = os.getcwd()
+    os.chdir(data_dir)
+    x_text = list(open(data_dir + "/swbd_utterance.csv", "r").readlines())
+    x_text=  [s.strip() for s in x_text]
+    x_text = [clean_str(sent) for sent in x_text]
+    y = pd.read_csv(data_dir + "/swbd_act.csv")
+    y = list(open(data_dir + "/swbd_act.csv", "r").readlines())
+    a = np.array([s.strip() for s in y])
+    y = categorical(a, drop=True)
+    #y = y.argmax(1)
+
+
+    '''
+    from scikits.statsmodels.tools import categorical
+
+    In [61]: a = np.array( ['a', 'b', 'c', 'a', 'b', 'c'])
+    
+    In [62]: b = categorical(a, drop=True)
+    
+    In [63]: b.argmax(1)
+    Out[63]: array([0, 1, 2, 0, 1, 2])
+    '''
+    #return [x_text, y]
     return [x_text, y]
 
 

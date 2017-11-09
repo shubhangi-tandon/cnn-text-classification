@@ -36,7 +36,8 @@ print("")
 
 # CHANGE THIS: Load data. Load your own data here
 if FLAGS.eval_train:
-    x_raw, y_test = data_helpers.load_data_and_labels(FLAGS.positive_data_file, FLAGS.negative_data_file)
+    #x_raw, y_test = data_helpers.load_data_and_labels(FLAGS.positive_data_file, FLAGS.negative_data_file)
+    x_raw, y_test = data_helpers.load_swbd_data()
     y_test = np.argmax(y_test, axis=1)
 else:
     x_raw = ["a masterpiece four years in the making", "everything is off."]
@@ -44,8 +45,7 @@ else:
 
 # Map data into vocabulary
 vocab_path = os.path.join(FLAGS.checkpoint_dir, "..", "vocab")
-vocab_processor = learn.preprocessing.VocabularyProcessor.restore(vocab_path)
-x_test = np.array(list(vocab_processor.transform(x_raw)))
+
 
 print("\nEvaluating...\n")
 
@@ -59,6 +59,8 @@ with graph.as_default():
       log_device_placement=FLAGS.log_device_placement)
     sess = tf.Session(config=session_conf)
     with sess.as_default():
+        vocab_processor = learn.preprocessing.VocabularyProcessor.restore(vocab_path)
+        x_test = np.array(list(vocab_processor.transform(x_raw)))
         # Load the saved meta graph and restore variables
         saver = tf.train.import_meta_graph("{}.meta".format(checkpoint_file))
         saver.restore(sess, checkpoint_file)

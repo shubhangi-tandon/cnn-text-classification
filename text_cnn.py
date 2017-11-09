@@ -20,7 +20,7 @@ class TextCNN(object):
         l2_loss = tf.constant(0.0)
 
         # Embedding layer
-        with tf.device('/cpu:0'), tf.name_scope("embedding"):
+        with tf.name_scope("embedding"):
             self.W = tf.Variable(
                 tf.random_uniform([vocab_size, embedding_size], -1.0, 1.0),
                 name="W")
@@ -54,7 +54,12 @@ class TextCNN(object):
 
         # Combine all the pooled features
         num_filters_total = num_filters * len(filter_sizes)
+        print(num_filters, len(filter_sizes))
+
+
         self.h_pool = tf.concat(pooled_outputs, 3)
+        print(num_filters_total)
+        print(self.h_pool.shape)
         self.h_pool_flat = tf.reshape(self.h_pool, [-1, num_filters_total])
 
         # Add dropout
