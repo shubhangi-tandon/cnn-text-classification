@@ -5,15 +5,17 @@ import numpy as np
 import os
 import time
 import datetime
-import ghissubot.cnn_classification.data_helpers
-from ghissubot.cnn_classification import data_helpers
-from ghissubot.cnn_classification.text_cnn2 import TextCNN
+
+import data_helpers
+from text_cnn import  TextCNN
 from tensorflow.contrib import learn
 
 # Parameters
 # ==================================================
 
 # Data loading params
+from train import vocab_processor
+
 tf.flags.DEFINE_float("dev_sample_percentage", 0.1, "Percentage of the training data to use for validation")
 
 # Model Hyperparameters
@@ -66,7 +68,7 @@ params = {
 # Load data
 print("Loading data...")
 
-x_text, y = data_helpers.load_swbd_data(params["cnn_source.max_seq_len"])
+x_text, y = data_helpers.load_swbd_data() #["cnn_source.max_seq_len"])
 print(x_text[0:5])
 
 # Randomly shuffle data
@@ -98,8 +100,15 @@ with tf.Graph().as_default():
     with sess.as_default():
 
         #TODO: tf.mode
-        cnn = TextCNN(params, "TRAIN", name="")
-
+        #cnn = TextCNN(params, "TRAIN") #, name="")
+        cnn = TextCNN(
+            sequence_length=x_train.shape[1],
+            num_classes=y_train.shape[1],
+            vocab_size=len(vocab_processor.vocabulary_),
+            embedding_size=FLAGS.embedding_dim,
+            filter_sizes=list(map(int, FLAGS.filter_sizes.split(","))),
+            num_filters=FLAGS.num_filters,
+            l2_reg_lambda=FLAGS.l2_reg_lambda)
         # Define Training procedure
         global_step = tf.Variable(0, name="global_step", trainable=False)
         optimizer = tf.train.AdamOptimizer(FLAGS.learning_rate)

@@ -50,6 +50,7 @@ def load_swbd_data(data_dir= os.getcwd() + "/data/switchboard"):
     from statsmodels.tools import categorical
     import pandas as pd
     prev_dir = os.getcwd()
+    print (data_dir)
     os.chdir(data_dir)
     x_text = list(open(data_dir + "/swbd_utterance.csv", "r").readlines())
     x_text=  [s.strip() for s in x_text]
